@@ -2,16 +2,10 @@ import React, { Component } from 'react';
 import { Graph } from './graph';
 import './App.css';
 
-// Define the size of the random graph
-const xCount = 5;
-const yCount = 5;
-const boxSize = 150;
-const probability = 0.6;
-
-// Figure out the canvas size
-const canvasWidth = boxSize * xCount;
-const canvasHeight = boxSize * yCount;
-const radius = boxSize / 8;
+// !!! IMPLEMENT ME
+const canvasWidth = window.innerWidth - 5;
+const canvasHeight = window.innerHeight - 5;
+const radius = 14;
 
 /**
  * GraphView
@@ -21,98 +15,61 @@ class GraphView extends Component {
    * On mount
    */
   componentDidMount() {
-    this.updateCanvasConnectedComponents();
+    this.updateCanvas();
   }
 
   /**
    * On state update
    */
   componentDidUpdate() {
-    this.updateCanvasConnectedComponents();
+    this.updateCanvas();
   }
 
   /**
-   * Draw the given verts
+   * Render the canvas
    */
-  drawVerts(vertexes, color='blue', clear=true) {
+  updateCanvas() {
+
     let canvas = this.refs.canvas;
     let ctx = canvas.getContext('2d');
-    
+
+    // !!! IMPLEMENT ME
+    // compute connected components
+    // draw edges
+    // draw verts
+    // draw vert values (labels)
+    // this.props.graph.createDummyGraph();
+
     // Clear it
-    if (clear) {
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    }
+    ctx.fillStyle = 'grey';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Draw the edges
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = color;
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-    for (let v of vertexes) { // From this vert
-      for (let e of v.edges) { // To all these verts
-        const v2 = e.destination;
+    // draw our dummy vertexes
+    this.props.graph.vertexes.forEach((v) => {
+      v.edges.forEach((e) => {
         ctx.beginPath();
         ctx.moveTo(v.pos.x, v.pos.y);
-        ctx.lineTo(v2.pos.x, v2.pos.y);
+        ctx.lineTo(e.dest.pos.x, e.dest.pos.y);
         ctx.stroke();
-      }
-    }
+      })
+    })
 
-    // Draw the verts on top
-    ctx.fillStyle = '#77f'; // light blue
-
-    for (let v of vertexes) {
+    this.props.graph.vertexes.forEach((v) => {
       ctx.beginPath();
-      ctx.arc(v.pos.x, v.pos.y, radius, 0, 2 * Math.PI, false);
-      ctx.stroke();
+      ctx.fillStyle = 'white';
+      ctx.arc(v.pos.x, v.pos.y, radius, 0, 2 * Math.PI);
       ctx.fill();
-    }
+      ctx.stroke();
+      //
+      // // fill in the text
+      ctx.fillStyle = 'black';
+      ctx.fillText(v.value, v.pos.x, v.pos.y);
+    });
 
-    // Draw the vert names
-    ctx.font = '10px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'white';
-
-    for (let v of vertexes) {
-      ctx.fillText(v.value, v.pos.x, v.pos.y + 4);
-    }
-  }
-  
-  /**
-   * Draw the entire graph
-   */
-  updateCanvasEntireGraph() {
-    const g = this.props.graph;
-    this.drawVerts(g.vertexes);
-    //g.dump();
-  }
-
-  /**
-   * Draw the connected components
-   */
-  updateCanvasConnectedComponents() {
-    function randomHexColor() {
-      let color = ((Math.random() * 240)|0).toString(16);
-
-      if (color.length === 1) {
-        color = '0' + color; // leading zero for values less than 0x10
-      }
-
-      return color;
-    }
-
-    const g = this.props.graph;
-    const connectedComponents = g.getConnectedComponents();
-
-    let clear = true;
-
-    for (let component of connectedComponents) {
-      // Color just like in CSS
-      const curColor = '#' + randomHexColor() + randomHexColor() + randomHexColor();
-
-      this.drawVerts(component, curColor, clear);
-      clear = false;
-    }
   }
 
   /**
@@ -130,32 +87,19 @@ class GraphView extends Component {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.onButton = this.onButton.bind(this);
 
     this.state = {
       graph: new Graph()
     };
 
-    this.state.graph.randomize(xCount, yCount, boxSize, probability);
-  }
-
-  /**
-   * Handle the button press
-   */
-  onButton() {
-    const state = {
-      graph: new Graph()
-    };
-
-    state.graph.randomize(xCount, yCount, boxSize, probability);
-
-    this.setState(state);
+    // !!! IMPLEMENT ME
+    // use the graph randomize() method
+    this.state.graph.randomize(12, 6, 150, 0.6);
   }
 
   render() {
     return (
       <div className="App">
-        <button onClick={this.onButton}>Random</button>
         <GraphView graph={this.state.graph}></GraphView>
       </div>
     );

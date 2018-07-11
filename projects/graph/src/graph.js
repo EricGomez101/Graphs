@@ -2,9 +2,9 @@
  * Edge
  */
 export class Edge {
-  constructor(destination, weight=1) {
-    this.destination = destination;
-    this.weight = weight;
+  // !!! IMPLEMENT ME
+  constructor(dest) {
+    this.dest = dest;
   }
 }
 
@@ -12,9 +12,11 @@ export class Edge {
  * Vertex
  */
 export class Vertex {
-  constructor(value='vertex') {
-    this.value = value;
+  // !!! IMPLEMENT ME
+  constructor(value='Default', pos={x: -1, y: -1}){
     this.edges = [];
+    this.value = value;
+    this.pos = pos;
   }
 }
 
@@ -24,6 +26,20 @@ export class Vertex {
 export class Graph {
   constructor() {
     this.vertexes = [];
+  }
+
+  createDummyGraph() {
+    const dummyVertex1 = new Vertex('v1', {x: 20, y: 25});
+    const dummyVertex2 = new Vertex('v2', {x: 100, y: 75});
+    const dummyVertex3 = new Vertex('v3', {x: 500, y: 605});
+
+    this.vertexes.push(dummyVertex1);
+    this.vertexes.push(dummyVertex2);
+    this.vertexes.push(dummyVertex3);
+
+    dummyVertex1.edges.push(new Edge(dummyVertex2));
+    dummyVertex2.edges.push(new Edge(dummyVertex3));
+    // dummyVertex2.edges.push(new Edge(dummyVertex1));
   }
 
   /**
@@ -115,57 +131,14 @@ export class Graph {
   /**
    * BFS
    */
-  bfs(start, reset=true) {
-    const component = [];
-    const queue = [];
-
-    if (reset) {
-      for (let v of this.vertexes) {
-        v.color = 'white';
-      }
-    }
-
-    start.color = 'gray';
-
-    queue.push(start);
-
-    while (queue.length > 0) {
-      const u = queue[0];
-
-      for (let e of u.edges) {
-        const v = e.destination;
-        if (v.color === 'white') {
-          v.color = 'gray';
-          queue.push(v);
-        }
-      }
-
-      queue.shift(); // de-queue
-      u.color = 'black';
-
-      component.push(u);
-    }
-
-    return component;
+  bfs(start) {
+    // !!! IMPLEMENT ME
   }
 
   /**
    * Get the connected components
    */
   getConnectedComponents() {
-    const componentsList = [];
-
-    let needReset = true;
-
-    for (let v of this.vertexes) {
-      if (needReset || v.color === 'white') {
-        const component = this.bfs(v, needReset);
-        needReset = false;
-
-        componentsList.push(component);
-      }
-    }
-
-    return componentsList;
+    // !!! IMPLEMENT ME
   }
 }
